@@ -26,6 +26,10 @@ public class LoginViewController {
     @FXML
     private Button btnLogin;
 
+    public Vendedor getVendedorLogiado() {
+        return vendedorLogiado;
+    }
+    private Vendedor vendedorLogiado;
     @FXML
     void initialize() {
         modelFactoryController = ModelFactoryController.getInstance();
@@ -51,6 +55,7 @@ public class LoginViewController {
                 stage.show();
 
             }else if(empleadoIniciado instanceof Vendedor){
+                vendedorLogiado = (Vendedor) empleadoIniciado;
                 FXMLLoader fxmlLoader = new FXMLLoader(MainApp.class.getResource("/co/edu/uniquindio/marketplace/views/vendedor-view.fxml"));
                 Scene scene = new Scene(fxmlLoader.load(), 500, 400);
                 Stage stage = new Stage();
@@ -91,5 +96,8 @@ public class LoginViewController {
         aler.setHeaderText(header);
         aler.setContentText(contenido);
         aler.showAndWait();
+    }
+    public LoginViewController (ModelFactoryController modelFactoryController){
+        this.modelFactoryController=modelFactoryController;
     }
 }

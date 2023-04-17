@@ -89,7 +89,7 @@ public class AdministradorViewController {
         tbVendedores.refresh();
     }
     private void abrirVentanaInfo(Vendedor vendedor) throws IOException {
-        modelFactoryController.getMarketplace().setVendedorSeleccionado(vendedor);
+
         if (vendedor != null) {
 
             FXMLLoader fxmlLoader = new FXMLLoader(MainApp.class.getResource("/co/edu/uniquindio/marketplace/views/vendedor-info.fxml"));
