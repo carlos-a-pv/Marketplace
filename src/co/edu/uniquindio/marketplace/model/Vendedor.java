@@ -1,6 +1,7 @@
 package co.edu.uniquindio.marketplace.model;
 
 import javax.sound.sampled.Port;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class Vendedor extends Empleado{
@@ -10,6 +11,10 @@ public class Vendedor extends Empleado{
     private String cedula;
     private String direccion;
     private String descripcion;
+
+    private String foto;
+
+
     private ArrayList<Producto> productos;
     private ArrayList<Solicitud> solicitudesEnviadas;
     private ArrayList<Solicitud> solicitudesRecibidas;
@@ -28,6 +33,7 @@ public class Vendedor extends Empleado{
          this.solicitudesRecibidas = new ArrayList<>();
          productos = new ArrayList<>();
          vendedoresAliados = new ArrayList<>();
+         foto ="null";
      }
 
      public Producto crearProducto(String nombre, String precio, Categoria categoria ){
@@ -54,6 +60,14 @@ public class Vendedor extends Empleado{
 
     public String getDireccion() {
         return direccion;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 
     @Override

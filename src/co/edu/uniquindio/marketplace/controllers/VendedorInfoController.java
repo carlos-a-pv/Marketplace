@@ -34,6 +34,8 @@ public class VendedorInfoController {
     private Button btnEliminar;
     @FXML
     private Button btnActualizar;
+    @FXML
+    private ImageView fotoVendedor;
 
 
     @FXML
@@ -47,6 +49,13 @@ public class VendedorInfoController {
         tfDireccion.setText(vendedorSeleccionado.getDireccion());
         tfUser.setText(vendedorSeleccionado.getUser().getNombre());
         tfPassword.setText(vendedorSeleccionado.getContra());
+        if (!vendedorSeleccionado.getFoto().equals("null")) {
+            fotoVendedor.setImage(new Image(vendedorSeleccionado.getFoto()));
+        }
+        else {
+            fotoVendedor.setImage(new Image("/resources/usuario.png"));
+        }
+
     }
     public void onEliminarVendedorClick(ActionEvent actionEvent) {
         eliminarEmpleado();
