@@ -2,6 +2,7 @@ package co.edu.uniquindio.marketplace.controllers;
 
 import co.edu.uniquindio.marketplace.MainApp;
 import co.edu.uniquindio.marketplace.model.*;
+import co.edu.uniquindio.marketplace.persistence.Persistencia;
 import com.sun.webkit.Timer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,16 +14,24 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -64,23 +73,9 @@ public class VendedorViewController {
         modelFactoryController = ModelFactoryController.getInstance();
         crudVendedorViewController = new CrudVendedorViewController(modelFactoryController);
 
-        tbVendedores.setItems(getListaVendedoresData());
-        this.colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        this.colApellido.setCellValueFactory(new PropertyValueFactory<>("apellido"));
-        this.colCedula.setCellValueFactory(new PropertyValueFactory<>("cedula"));
-        this.colDireccion.setCellValueFactory(new PropertyValueFactory<>("direccion"));
-        this.colUser.setCellValueFactory(new PropertyValueFactory<>("user"));
-        this.colPassword.setCellValueFactory(new PropertyValueFactory<>("contra"));
-
         modelFactoryController = ModelFactoryController.getInstance();
         crudProductoViewController = new CrudProductoViewController(modelFactoryController);
         Vendedor vendedorLogeado = modelFactoryController.getVendedorLogeado();
-
-        /*Image img2 = new Image("/resources/hacia-atras.png");
-        ImageView view2 = new ImageView(img2);
-        view2.setFitHeight(20);
-        view2.setPreserveRatio(true);
-        btnVolver1.setGraphic(view2);*/
 
         int cantidadVendedores = modelFactoryController.obtenerVendedores().size();
         for (int i=0; i<cantidadVendedores; i++){
@@ -111,7 +106,6 @@ public class VendedorViewController {
             //Estilos
             content.setPadding(new Insets(20,20,20,20));
             content.setAlignment(Pos.CENTER);
-            fotoUsuario.setImage(image);
             content.setSpacing(30);
             hbox.setSpacing(30);
             btnCambiarImagen.setAlignment(Pos.BOTTOM_LEFT);
@@ -147,6 +141,13 @@ public class VendedorViewController {
             view3.setPreserveRatio(true);
             btnSolicitud.setGraphic(view3);
 
+            if(!modelFactoryController.obtenerVendedores().get(i).getFoto().equals("null")){
+               fotoUsuario.setImage(new Image(modelFactoryController.obtenerVendedores().get(i).getFoto()));
+            }
+            else {
+                fotoUsuario.setImage(image);
+            }
+
             //Add de componentes
             content.getChildren().addAll(hbox,btnAddVendedor,  btnCambiarImagen, productos, btnPublicar);
             tab.setContent(content);
@@ -168,6 +169,7 @@ public class VendedorViewController {
             btnVolver.setOnMouseClicked((event -> {
                 try {
                     volverAtras(btnVolver);
+                    Persistencia.guardarVendedores(modelFactoryController.obtenerVendedores());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -223,7 +225,10 @@ public class VendedorViewController {
                 });
 
             });
+            btnCambiarImagen.setOnMouseClicked(event ->{
 
+                cambiarFotoPerfil(fotoUsuario);
+            });
             btnSolicitud.setOnMouseClicked((event -> {
                 try {
                     abrirVentanaSolicitud();
@@ -258,7 +263,7 @@ public class VendedorViewController {
 
         //Funcionalidad para posicionar el focus directamente en el vendedor logeado
         int indice = buscarVendedorLogeado(vendedorLogeado);
-        tabPane.getSelectionModel().select(indice+1);
+        tabPane.getSelectionModel().select(indice);
 
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             if(newTab.equals("tabMarketplace")){
@@ -273,6 +278,33 @@ public class VendedorViewController {
                 }
             }
         });
+
+    }
+
+    private  void cambiarFotoPerfil(ImageView imageView) {
+
+        FileChooser fileChooser = new FileChooser();
+        Stage primaryStage = new Stage();
+
+        // Establece el título de la ventana del explorador de archivos
+        fileChooser.setTitle("Seleccionar archivo");
+
+        // Establece el directorio inicial del explorador de archivos
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+
+        // Agrega filtros de extensión de archivo si es necesario
+        // fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos de texto", "*.txt"));
+
+        // Muestra el cuadro de diálogo del explorador de archivos
+        File selectedFile = fileChooser.showOpenDialog(primaryStage);
+
+        if (selectedFile != null) {
+            // Realiza acciones con el archivo seleccionado
+            System.out.println(""+selectedFile.getAbsolutePath());
+            Image image = new Image(selectedFile.getAbsolutePath());
+            imageView.setImage(image);
+            modelFactoryController.getVendedorLogeado().setFoto(selectedFile.getAbsolutePath());
+        }
 
     }
 

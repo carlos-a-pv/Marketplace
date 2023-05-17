@@ -59,7 +59,7 @@ public class Persistencia {
         for(Vendedor vendedor:listaVendedores)
         {
             contenido+= vendedor.getNombre()+"@@"+vendedor.getApellido()+"@@"+vendedor.getCedula()+"@@"+vendedor.getDireccion()
-                    +"@@"+vendedor.getUser().getNombre()+"@@"+vendedor.getContra()+"\n";
+                    +"@@"+vendedor.getUser().getNombre()+"@@"+vendedor.getContra()+"@@"+vendedor.getFoto()+""+"\n";
         }
         ArchivoUtil.guardarArchivo(RUTA_ARCHIVO_VENDEDORES, contenido, false);
 
@@ -120,6 +120,7 @@ public class Persistencia {
             vendedor.setDireccion(linea.split("@@")[3]);
             vendedor.getUser().setNombre(linea.split("@@")[4]);
             vendedor.setContra(linea.split("@@")[5]);
+            vendedor.setFoto(linea.split("@@")[6]);
             vendedores.add(vendedor);
         }
         return vendedores;
